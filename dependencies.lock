@@ -1,0 +1,27 @@
+dependencies:
+  drfhaust/eth-w5500:
+    component_hash: fdc1c579dbe6d29d1a33a21b3e628baeda3325e1e04d9d4ae350ce474d581b4f
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    targets:
+    - esp32
+    - esp32s2
+    - esp32s3
+    - esp32c3
+    - esp32c6
+    version: 1.0.0
+  idf:
+    source:
+      type: idf
+    version: 5.2.0
+direct_dependencies:
+- drfhaust/eth-w5500
+- idf
+manifest_hash: 751cb1aa978ac35737f182d2d67b54a3fff747de4f0969db1bbb82431fc59130
+target: esp32
+version: 2.0.0
