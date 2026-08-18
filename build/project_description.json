@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "my_eth_uart",
-    "project_version":    "24f8dc8-dirty",
+    "project_version":    "f804dd9-dirty",
     "project_path":       "/home/chenzefeng/Documents/ESP32/esp32-board/my_eth_uart",
     "idf_path":           "/home/chenzefeng/Documents/ESP32/esp-idf",
     "build_dir":          "/home/chenzefeng/Documents/ESP32/esp32-board/my_eth_uart/build",
@@ -861,7 +861,7 @@
             "type": "LIBRARY",
             "lib": "__idf_my_eth",
             "reqs": [ "esp_netif" ],
-            "priv_reqs": [ "driver", "esp_eth", "esp_event", "freertos" ],
+            "priv_reqs": [ "driver", "esp_eth", "esp_event", "freertos", "efuse" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "/home/chenzefeng/Documents/ESP32/esp32-board/my_eth_uart/build/esp-idf/my_eth/libmy_eth.a",
@@ -2197,7 +2197,7 @@
             "dir": "/home/chenzefeng/Documents/ESP32/esp32-board/my_eth_uart/components/my_eth",
             "lib": "__idf_my_eth",
             "reqs": [ "esp_netif" ],
-            "priv_reqs": [ "driver", "esp_eth", "esp_event", "freertos" ],
+            "priv_reqs": [ "driver", "esp_eth", "esp_event", "freertos", "efuse" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "include_dirs": [ "." ]

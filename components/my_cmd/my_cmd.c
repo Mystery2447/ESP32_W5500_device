@@ -328,8 +328,10 @@ static void register_send_poweron(void)
 
 /* ================================================================
  * relay  —  控制继电器 GPIO
+ *   用法: relay <1|2> <on|off>
  * ================================================================ */
 static struct {
+    struct arg_int *num;
     struct arg_str *state;
     struct arg_end *end;
 } relay_args;
@@ -341,13 +343,18 @@ static int relay_cmd(int argc, char **argv)
         arg_print_errors(stderr, relay_args.end, argv[0]);
         return 1;
     }
+    int num = relay_args.num->ival[0];
+    if (num < 1 || num > 2) {
+        fprintf(stderr, "Invalid relay number: %d (use 1 or 2)\n", num);
+        return 1;
+    }
     const char *state = relay_args.state->sval[0];
     if (strcmp(state, "on") == 0) {
-        relay_set(true);
-        fprintf(stdout, "Relay ON\n");
+        relay_set(num, true);
+        fprintf(stdout, "Relay%d ON\n", num);
     } else if (strcmp(state, "off") == 0) {
-        relay_set(false);
-        fprintf(stdout, "Relay OFF\n");
+        relay_set(num, false);
+        fprintf(stdout, "Relay%d OFF\n", num);
     } else {
         fprintf(stderr, "Invalid arg: use on/off\n");
         return 1;
@@ -357,13 +364,14 @@ static int relay_cmd(int argc, char **argv)
 
 static void register_relay_cmd(void)
 {
-    relay_init();   /* 初始化继电器 GPIO，默认关闭 */
+    relay_init();   /* 初始化两路继电器，默认关闭 */
 
+    relay_args.num   = arg_int1(NULL, NULL, "<1|2>", "Relay number (1 or 2)");
     relay_args.state = arg_str1(NULL, NULL, "<on|off>", "Relay state");
-    relay_args.end   = arg_end(1);
+    relay_args.end   = arg_end(2);
     const esp_console_cmd_t cmd = {
         .command  = "relay",
-        .help     = "Control relay GPIO (on/off)",
+        .help     = "Control relay (relay <1|2> <on|off>)",
         .hint     = NULL,
         .func     = relay_cmd,
         .argtable = &relay_args

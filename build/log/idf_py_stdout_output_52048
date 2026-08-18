@@ -1,0 +1,9 @@
+[1/1] cd /home/chenzefeng/Documents/ESP32/esp32-board/my_eth_uart/build/esp-idf/partition_table && /usr/local/bin/cmake -E echo "Partition table binary generated. Contents:" && /usr/local/bin/cmake -E echo "*******************************************************************************" && /home/chenzefeng/.espressif/python_env/idf5.2_py3.8_env/bin/python /home/chenzefeng/Documents/ESP32/esp-idf/components/partition_table/gen_esp32part.py -q --offset 0x8000 --flash-size 4MB -- /home/chenzefeng/Documents/ESP32/esp32-board/my_eth_uart/build/partition_table/partition-table.bin && /usr/local/bin/cmake -E echo "*******************************************************************************"
+Partition table binary generated. Contents:
+*******************************************************************************
+# ESP-IDF Partition Table
+# Name, Type, SubType, Offset, Size, Flags
+nvs,data,nvs,0x9000,24K,
+phy_init,data,phy,0xf000,4K,
+factory,app,factory,0x10000,1M,
+*******************************************************************************

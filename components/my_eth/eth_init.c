@@ -4,6 +4,7 @@
 #include "esp_eth_mac.h"
 #include "esp_eth_phy.h"
 #include "esp_event.h"
+#include "esp_mac.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 #include "driver/spi_master.h"
@@ -18,7 +19,7 @@ static void w5500_spi_check(void)
     spi_device_handle_t spi;
     spi_device_interface_config_t devcfg = {
         .mode           = 0,
-        .clock_speed_hz = 1 * 1000 * 1000,   /* 1MHz，最保守速率 */
+        .clock_speed_hz = 5 * 1000 * 1000,   /* 5MHz，最保守速率 */
         .spics_io_num   = ETH_SPI_CS_GPIO,
         .queue_size     = 1,
     };
@@ -80,11 +81,16 @@ static void eth_event_handler(void *arg, esp_event_base_t event_base,
                     ESP_LOGI(TAG, "Static IP: %s", s_net_cfg.ip);
                     xEventGroupSetBits(s_eth_event_grp, ETH_CONNECTED_BIT);
                 }
+            } else {
+                /* DHCP：显式启动DHCP客户端 */
+                ESP_LOGI(TAG, "Starting DHCP client...");
+                esp_netif_dhcpc_start(s_eth_netif);
             }
             break;
 
         case ETHERNET_EVENT_DISCONNECTED:
             ESP_LOGW(TAG, "Ethernet Link Down");
+            esp_netif_dhcpc_stop(s_eth_netif);
             xEventGroupSetBits(s_eth_event_grp, ETH_FAIL_BIT);
             break;
 
@@ -195,6 +201,14 @@ esp_err_t eth_start(IP4_info_t *net)
     esp_eth_config_t  eth_cfg    = ETH_DEFAULT_CONFIG(mac, phy);
     esp_eth_handle_t  eth_handle = NULL;
     ESP_ERROR_CHECK(esp_eth_driver_install(&eth_cfg, &eth_handle));
+
+    /* 从 eFuse 读取 MAC 地址并写入 W5500（必须在 driver_install 之后，因为 mac->init 会软复位清空 MAC）*/
+    uint8_t mac_addr[6];
+    esp_read_mac(mac_addr, ESP_MAC_ETH);
+    mac->set_addr(mac, mac_addr);
+    ESP_LOGI(TAG, "MAC: %02X:%02X:%02X:%02X:%02X:%02X",
+             mac_addr[0], mac_addr[1], mac_addr[2],
+             mac_addr[3], mac_addr[4], mac_addr[5]);
 
     /* --- 创建以太网 netif --- */
     esp_netif_config_t netif_cfg = ESP_NETIF_DEFAULT_ETH();

@@ -7,13 +7,13 @@
 
 /* ---- W5500 SPI 引脚，根据实际接线修改 ---- */
 #define ETH_SPI_HOST       SPI2_HOST   // HSPI
-#define ETH_SPI_MISO_GPIO  25
+#define ETH_SPI_MISO_GPIO  27
 #define ETH_SPI_MOSI_GPIO  26
 #define ETH_SPI_SCLK_GPIO  14
-#define ETH_SPI_CS_GPIO    27
-#define ETH_INT_GPIO       32          // 支持内部上拉
-#define ETH_RST_GPIO       13
-#define ETH_SPI_CLOCK_MHZ  5
+#define ETH_SPI_CS_GPIO    12
+#define ETH_INT_GPIO       25          // 支持内部上拉
+#define ETH_RST_GPIO       33
+#define ETH_SPI_CLOCK_MHZ  20          // 20MHz，W5500最高可达80MHz，但ESP32 SPI2/3在高于40MHz时可能不稳定
 /* ----------------------------------------- */
 
 typedef struct {
